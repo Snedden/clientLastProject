@@ -1,0 +1,40 @@
+<html ng-app="myApp">
+<head>
+<title>
+  Client Project
+</title>
+	<script src="lib/jquery-2.1.4.min.js"></script>
+	<script src="lib/xmlToJson.JqueryPlugIn.js"></script>
+	<script src="lib/angular.min.js" ></script>
+	<script src="js/controllers.js" ></script>
+	
+</head>	
+<body>
+	<div  id='test'>
+		
+		<select class="form-control" ng-controller="typeController" >
+  			<option ng-repeat="types in row" >{{types.type}}</option>
+  			
+		</select>
+
+        <div ng-controller="statesController" style="display:inline-block">
+			<select class="form-control" ng-model="state" ng-options="state.abbreviation for state in states" ng-change="loadCities(state.abbreviation)"    >
+	  			<!--<option ng-repeat="state in states" >{{state.abbreviation}}</option>-->
+	  			
+			</select>
+          
+			<select class="form-control" ng-model="city" ng-init="cities[0].city" ng-options="city.city for city in cities"  >
+	  			
+	  			
+			</select>
+        </div>
+        <div id='inputType'>
+        	<input  name="orgName"  placeholder="name">
+        	<input  name="orgCounty"  placeholder="county">
+        	<input  name="orgZipcode"  placeholder="zip  code">
+        </div>
+		
+
+	</div>	
+</body>
+</html>
