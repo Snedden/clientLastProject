@@ -6,35 +6,103 @@
 	<script src="lib/jquery-2.1.4.min.js"></script>
 	<script src="lib/xmlToJson.JqueryPlugIn.js"></script>
 	<script src="lib/angular.min.js" ></script>
+	<script src="lib/angularRoute-min.js"></script>
+	<script src="lib/bootstrap/js/bootstrap.min.js"></script> 
+    <script src="lib/DynaTable/jquery.dynatable.js" ></script>
+    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	<script src="js/controllers.js" ></script>
 	
+<style>
+	body .modal-dialog {
+    /* new custom width */
+    width: 900px;
+  
+   
+}
+</style>
+   
+      
+
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="lib/DynaTable/jquery.dynatable.css"/>
+	<link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+	
 </head>	
-<body>
-	<div  id='test'>
-		
-		<select class="form-control" ng-controller="typeController" >
-  			<option ng-repeat="types in row" >{{types.type}}</option>
-  			
-		</select>
+<body >
+	<div   style="width:90%;margin:10 auto " ng-controller="statesController" >
+		 <div  class="row" id='selectType'>
+		 	<div class="col-md-4" >
+				<select class="form-control"  ng-model="type" ng-options="type.type for type in row" ng-change="getFormData()"  >
+		  		
+		  		</select>
+            </div>	
+            <div class="col-md-4">
+				<select class="form-control" ng-model="state" ng-options="state.abbreviation for state in states" ng-change="loadCities()">
+	  			</select>
+            </div>
 
-        <div ng-controller="statesController" style="display:inline-block">
-			<select class="form-control" ng-model="state" ng-options="state.abbreviation for state in states" ng-change="loadCities(state.abbreviation)"    >
-	  			<!--<option ng-repeat="state in states" >{{state.abbreviation}}</option>-->
-	  			
-			</select>
-          
-			<select class="form-control" ng-model="city" ng-init="cities[0].city" ng-options="city.city for city in cities"  >
-	  			
-	  			
-			</select>
+            <div class="col-md-4">
+				<select class="form-control" ng-model="city" ng-init="cities[0].city" ng-options="city.city for city in cities" ng-change="cityChanged(city.city)"  >
+	  			</select>
+	  		</div>	
+	  			{{city.city}}{{ state.name}}{{ type.type}}{{ orgName}}{{ orgCounty}}{{ orgZip}}
         </div>
-        <div id='inputType'>
-        	<input  name="orgName"  placeholder="name">
-        	<input  name="orgCounty"  placeholder="county">
-        	<input  name="orgZipcode"  placeholder="zip  code">
+        <div id='inputType' style="margin-top:10px">
+        	<div class="col-md-4" >
+        		<input ng-blur="getFormData()"  ng-model="orgName" name="orgName"  placeholder="name">
+        	</div>	
+        	<div class="col-md-4" >
+        		<input ng-blur="getFormData()" name="orgCounty" ng-model="orgCounty"  placeholder="county">
+        	</div>	
+        	<div class="col-md-4" >
+        		<input ng-blur="getFormData()" name="orgZipcode" ng-model="orgZip"  placeholder="zip  code">
+        	</div>
         </div>
 		
+		<div id='responseTable' class="container" style="position:relative;top:50px">
+    		<table id="my-final-table" style="width:1200px; text-align:left;" class="table table-striped">
+	  			<thead>
 
-	</div>	
+	    			<th>CountyName</th>
+	   				<th>Email</th>
+	   				<th>Name</th>
+	   				<th>OrganizationID</th>
+	   				<th>State</th>
+	   				<th>city</th>
+	   				<th>type</th>
+	   				<th>zip</th>
+	  			</thead>
+	  			<tbody>
+	  			</tbody>
+			</table>
+   		 </div>
+
+   		<!-- Button trigger modal -->
+   		<div>
+			
+              
+             <p data-target="#myModal" data-toggle="modal"  data-id="my_id_value" >wordk</p>
+		<div>	
+			<!-- Modal -->
+
+			<div class="modal fade admin" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+			        
+			      <div class="modal-body">
+			        <div id='tabs'>
+			      	</div>
+			      </div>
+			      
+			    </div>
+			  </div>
+			</div>
+
+	</div>
+   		 
+
 </body>
 </html>
