@@ -1,0 +1,165 @@
+<section  id="mainPage">
+	<div  class="row" id='selectType'>
+		 	<div class="col-md-4" >
+				<select class="form-control"  ng-model="type" ng-options="type.type for type in row" ng-change="getFormData()"  >
+		  		
+		  		</select>
+            </div>	
+            <div class="col-md-4">
+				<select class="form-control" ng-model="state" ng-options="state.abbreviation for state in states" ng-change="loadCities()">
+	  			</select>
+            </div>
+
+            <div class="col-md-4">
+				<select class="form-control" ng-model="city" ng-init="cities[0].city" ng-options="city.city for city in cities" ng-change="cityChanged(city.city)"  >
+	  			</select>
+	  		</div>	
+	  			{{city.city}}{{ state.name}}{{ type.type}}{{ orgName}}{{ orgCounty}}{{ orgZip}}
+        </div>
+        <div id='inputType' style="margin-top:10px">
+        	<div class="col-md-4" >
+        		<input ng-blur="getFormData()"  ng-model="orgName" name="orgName"  placeholder="name">
+        	</div>	
+        	<div class="col-md-4" >
+        		<input ng-blur="getFormData()" name="orgCounty" ng-model="orgCounty"  placeholder="county">
+        	</div>	
+        	<div class="col-md-4" >
+        		<input ng-blur="getFormData()" name="orgZipcode" ng-model="orgZip"  placeholder="zip  code">
+        	</div>
+        </div>
+		
+		<div id='responseTable' class="container" style="position:relative;top:50px">
+    		<table id="my-final-table" style="width:1200px; text-align:left;" class="table table-striped">
+	  			<thead>
+
+	    			<th>CountyName</th>
+	   				<th>Email</th>
+	   				<th>Name</th>
+	   				<th>OrganizationID</th>
+	   				<th>State</th>
+	   				<th>city</th>
+	   				<th>type</th>
+	   				<th>zip</th>
+	  			</thead>
+	  			<tbody>
+	  			</tbody>
+			</table>
+   		 </div>
+
+   		<!-- Button trigger modal -->
+   		<div>
+			
+              
+         	
+			<!-- Modal -->
+
+			<div class="modal fade admin" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+			        
+			      <div class="modal-body">
+			        <div id='tabs'>
+			        	<div id="tabs2">
+					         <ul >
+					            <li  ng-repeat="row in tabs.row"><a href="#tabs-{{$index +2}}">{{row.Tab}}</a></li>
+					            
+					         </ul>
+					         <div   ng-repeat="row in tabs.row" id="tabs-{{$index + 2}}">
+
+					            <div ng-if="row.Tab=='Locations'">
+					            	<div id='locationDetail' style="width:40%;;display:inline-block">
+
+                                         <select ng-if="locations.count!='1'" ng-model="obj.location" ng-options="location.type for location in locations.location" ng-change="changeLocation()"></select><!--ngmodel doesn't work under ng--if child scope-->
+
+                                         
+                                         	  <p >Type:
+                                         	  	<span ng=if="locations.count!='1'">{{obj.location.type}}</span>
+                                         	  	<span ng=if="locations.count==='1'">{{locations.location.type}}</span>
+                                         	  </p>
+
+	                                          <p>Address:
+	                                          	<span ng=if="locations.count!='1'">{{obj.location.address1}}</span>
+	                                          	<span ng=if="locations.count=='1'">{{locations.locations.address1}}</span>
+	                                          </p>
+
+	                                          <p> City:
+	                                          	<span  ng=if="locations.count!='1'">{{obj.location.city}}</span>
+	                                            <span ng=if="locations.count=='1'">{{locations.location.city}}</span>
+	                                          </p>  
+
+	                                          <p>State:
+	                                          	<span  ng=if="locations.count!='1'">{{obj.location.state}}</span>
+												<span ng=if="locations.count=='1'">{{locations.location.state}}</span>
+	                                      	  </p>
+
+	                                          <p >Zip:
+	                                          	<span ng=if="locations.count!='1'">{{obj.location.zip}}</span>
+	                                          	<span ng=if="locations.count=='1'">{{locations.location.zip}}</span>
+	                                          </p>
+	                                          
+	                                          <p>Phone:
+	                                          	<span  ng=if="locations.count!='1'">{{obj.location.phone}}</span>
+	                                            <span ng=if="locations.count=='1'">{{locations.location.phone}}</span>
+	                                          </p>
+
+	                                          <p>Lat:
+	                                          	<span ng=if="locations.count!='1'">{{obj.location.lat}}</span>
+	                                          	<span ng=if="locations.count=='1'">{{locations.location.lat}}</span>
+	                                          </p>
+
+	                                          <p>Lon:
+	                                          	<span  ng=if="locations.count!='1'">{{obj.location.lon}} </span>
+	                                          	<span ng=if="locations.count=='1'">{{locations.location.lon}}</span>
+	                                          </p>
+
+	                                          <p>County:
+	                                          	<span ng=if="locations.count!='1'">{{obj.location.countyName}}</span>
+	                                          	<span ng=if="locations.count=='1'">{{locations.countName}}</span>
+	                                          </p>
+
+                                     </div>
+                                     <div id='locationMap' style="width:40%;display:inline-block;background-color:black">
+
+                                     </div>	
+                                      <!--google maps api-->
+    								
+                                    
+					            </div>
+
+					             <div ng-if="row.Tab=='People'">
+					            	<div id='locationDetail' style="width:40%;;display:inline-block">
+
+                                         <select ng-if="people.siteCount!='1'"  ng-model="obj.person" ng-options="site.siteType for site in people.site" ng-change="changePeople()"></select>
+ 
+                                         <p>Address:
+                                         	<span  ng-if="locations.count!='1'">{{obj.person.address}}</p><!--multiple sites found-->
+                                         	<span ng-if="locations.count=='1'">{{people.site.address}}</span><!--single site found-->
+                                         </p>
+                                          
+                                         	
+
+                                     </div>
+                                     <div id='locationMap' style="width:40%;display:inline-block;background-color:black">
+
+                                     </div>	
+                                      <!--google maps api-->
+    								
+                                    
+					            </div>
+
+					            <p >{{row.Tab}} </p>
+					         </div>
+					        
+					    </div>
+			      	</div>
+			      </div>
+			      
+			    </div>
+			  </div>
+			</div>
+
+			
+</section>

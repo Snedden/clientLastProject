@@ -1,12 +1,15 @@
-var myApp=angular.module('myApp',[]);
+var pagesControllers=angular.module('pagesControllers',[]);
 
 
-myApp.controller('statesController',['$scope','$http',function ($scope,$http){
+pagesControllers.controller('mainController',['$scope','$http',function ($scope,$http){
 
         
-
+     
         var baseUrl='http://people.rit.edu/dmgics/754/23/proxy.php?';
         $scope.states = [];  //initialize state to empty array
+
+       $scope.obj={location,
+                    person:''};//create this to catch location from selectLocation as ng-model creates child scope in ng-if
 
 
         $http.get(baseUrl, {params:{"path":'/OrgTypes'}}).then(function(data){
@@ -138,16 +141,95 @@ myApp.controller('statesController',['$scope','$http',function ($scope,$http){
 
         //triggered before modal dialog is opened
           $('#myModal').on('show.bs.modal', function(e) {
+              var r; //waiter for setTimeOUt
               console.log('data',$(e.relatedTarget).data('id'))
               //get data-id attribute of the clicked element
               //var bookId = $(e.relatedTarget).data('book-id');
               var id=$(e.relatedTarget).data('id')
-               getTabs(id); 
-              //populate the textbox
-              //$(e.currentTarget).find('input[name="bookId"]').val(bookId);
-          });  
+              //getTabs(id); 
+              //tabs functionality 
+              //GEt the tabs data and make tabs for modal
+              $http.get(baseUrl, {params:{"path": "/Application/Tabs?orgId="+id}}).then(function(data){
+                     console.log('xmldata', data.data);
+                     var jsonData = $.xml2json(data.data);
+                     console.log('tabs',jsonData);
 
-            //iterating over each tr and adding click event for modal
+                     $scope.tabs=jsonData;//save to model
+                     console.log('scope tabs',$scope.tabs)
+                      r =setTimeout(initTabs,50); //give some time to modal to save data  
+
+                     function initTabs(){
+                        if ($( "#tabs2" ).data("ui-tabs")) {
+                            $( "#tabs2" ).tabs( "destroy" );
+                        }
+                        $( "#tabs2" ).tabs();
+                        console.log('timer');
+                        r=clearTimeout();
+                     }
+                     $scope.getLocationInfo(id);
+                     $scope.getPeopleInfo(id);
+              });
+            });    
+
+          
+
+
+          $scope.getLocationInfo=function(orgId){
+              
+              $http.get(baseUrl, {params:{"path": "/"+orgId+"/Locations"}}).then(function(data){ 
+                var jsonData = $.xml2json(data.data);
+                console.log('location: ',jsonData);
+                $scope.locations=jsonData;
+                if(jsonData.count==='1'){
+                    $scope.locationType=jsonData.location.type;
+                    $scope.address1=jsonData.location.address1;
+                    $scope.address2=jsonData.location.address2;
+                    $scope.locationCity=jsonData.location.city;
+                    $scope.locationState=jsonData.location.state;
+                    $scope.locationZip=jsonData.location.zip;
+                    $scope.phone=jsonData.location.phone;
+                    $scope.lat=jsonData.location.latitude;
+                    $scope.lon=jsonData.location.longitude;
+                }
+                
+
+                });
+            }
+
+             $scope.getPeopleInfo=function(orgId){
+              
+              $http.get(baseUrl, {params:{"path": "/"+orgId+"/People"}}).then(function(data){ 
+                var jsonData = $.xml2json(data.data);
+                console.log('location: ',jsonData);
+                $scope.people=jsonData;
+                console.log('peopleScope ',$scope.people);
+                
+
+                });
+            }
+
+
+           //when user change locatino in select 
+          $scope.changeLocation=function(){
+              console.log('change location called');
+               /* $scope.address1=location.address1;
+                $scope.locationType=location.type;
+                $scope.address1=location.address1;
+                $scope.address2=location.address2;
+                $scope.locationCity=location.city;
+                $scope.locationState=location.state;
+                $scope.locationZip=location.zip;
+                $scope.phone=location.phone;
+                $scope.lat=location.latitude;
+                $scope.lon=location.longitude;*/
+          }
+
+          //Whenuser changes site in peopletab
+           $scope.changePeople=function(){
+               // $scope.peopleSiteAddress=site.address;
+           }
+
+            //iterating over each tr and adding click event for modal for pagechange in table 
             $('#my-final-table').bind("DOMSubtreeModified",function(){
                $('#my-final-table').find('tbody').children().each(function(){
                     var TDs=$(this).children() //this is row-tr
@@ -159,87 +241,9 @@ myApp.controller('statesController',['$scope','$http',function ($scope,$http){
                 })
             });
 
-
-             function getTabs(id){  //append tabs to the dialog modal
-
-            
-                $('#tabs').empty(); //empty previously append tabs
             
 
-              
-              $http.get(baseUrl, {params:{"path": "/Application/Tabs?orgId="+id}}).then(function(data){  //what makes this function call immediately
-                             
-                              console.log('tabData',data);
-                              var tabsDiv=document.createElement('div');
-                              tabsDiv.setAttribute('id','tabs-1');
-                              document.getElementById('tabs').appendChild(tabsDiv);
-                              var tabsUl=document.createElement('ul');
-                              tabsDiv.appendChild(tabsUl);
-                        //travesing through XML
-                            var j=2;
-                            var dataXml=data.data;
-                            $(dataXml).find('row').each(function(i){
-                                      var tabLi=document.createElement('li');
-                                      tabsUl.appendChild(tabLi);
-                                      var anchor=document.createElement('a');
-                                      var href='#tabs-'+j;
-                                    
-                                      anchor.setAttribute('href',href);
-                                      tabLi.appendChild(anchor);
-                                      var txt=$(this).find('Tab').text();
-                                      var tabText=document.createTextNode(txt);
-                                      anchor.appendChild(tabText);
-                                      
-                                      var tabInDiv=document.createElement('div');
-                                      var tabDivId='tabs-'+j;
-                                      tabInDiv.setAttribute('id',tabDivId);
-                                      var tabDivText=$(this).find('Tab').text();
-                                      var tabDivTextNode=document.createTextNode(tabDivText);
-                                      tabInDiv.appendChild(tabDivTextNode);
-                                      tabsDiv.appendChild(tabInDiv)
-
-                                      if(tabDivText==='Locations'){
-                                        $scope.populateLocation(tabDivId,id);
-                                      }
-                                       
-                                      
-                                      j++;
-                              });
-                             //tabs functionality 
-                               $( "#tabs-1" ).tabs();
-                        
-                     
-              });
-                
             
-            }
-
-            $scope.populateLocation=function(locationId,orgId){
-              id='#'+locationId;
-              console.log(id , ' ',$(id));
-               $http.get(baseUrl, {params:{"path": "/"+orgId+"/Locations"}}).then(function(data){ 
-                var jsonData = $.xml2json(data.data);
-                console.log(jsonData);
-                $scope.locations=jsonData;
-
-                var locationTemplate='<div>'+
-                                        '<div style="width:50%,background-color:gray;display:inline-block'>+
-                                          '<p>Address:</p>'+
-                                          '<p>City:</p>'+
-                                          '<p>State:</p>'+
-                                          '<p>Zip:</p>'+
-                                          '<p>Phone:</p>'+
-                                          '<p>Lat:</p>'+
-                                          '<p>Lon:</p>'+ 
-                                          '<p>Country:</p>'+                                    
-                                        '</div>'+
-                                        '<div style="width:50%,display:inline-block,background-color:black">'+
-                                        '</div>'+
-                                      '</div>' ;
-                $(id).append(data.data);
-
-               });
-            }
               
 }]);
 

@@ -8,9 +8,14 @@
 	<script src="lib/angular.min.js" ></script>
 	<script src="lib/angularRoute-min.js"></script>
 	<script src="lib/bootstrap/js/bootstrap.min.js"></script> 
-    <script src="lib/DynaTable/jquery.dynatable.js" ></script>
-    <script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    	<script src="lib/DynaTable/jquery.dynatable.js" ></script>
+    	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+    	<script src="js/myApp.js" ></script>
 	<script src="js/controllers.js" ></script>
+
+
+	
 	
 <style>
 	body .modal-dialog {
@@ -29,80 +34,28 @@
 	
 </head>	
 <body >
-	<div   style="width:90%;margin:10 auto " ng-controller="statesController" >
-		 <div  class="row" id='selectType'>
-		 	<div class="col-md-4" >
-				<select class="form-control"  ng-model="type" ng-options="type.type for type in row" ng-change="getFormData()"  >
-		  		
-		  		</select>
-            </div>	
-            <div class="col-md-4">
-				<select class="form-control" ng-model="state" ng-options="state.abbreviation for state in states" ng-change="loadCities()">
-	  			</select>
-            </div>
-
-            <div class="col-md-4">
-				<select class="form-control" ng-model="city" ng-init="cities[0].city" ng-options="city.city for city in cities" ng-change="cityChanged(city.city)"  >
-	  			</select>
-	  		</div>	
-	  			{{city.city}}{{ state.name}}{{ type.type}}{{ orgName}}{{ orgCounty}}{{ orgZip}}
-        </div>
-        <div id='inputType' style="margin-top:10px">
-        	<div class="col-md-4" >
-        		<input ng-blur="getFormData()"  ng-model="orgName" name="orgName"  placeholder="name">
-        	</div>	
-        	<div class="col-md-4" >
-        		<input ng-blur="getFormData()" name="orgCounty" ng-model="orgCounty"  placeholder="county">
-        	</div>	
-        	<div class="col-md-4" >
-        		<input ng-blur="getFormData()" name="orgZipcode" ng-model="orgZip"  placeholder="zip  code">
-        	</div>
-        </div>
+	<div   style="width:90%;margin:10 auto " ng-view >
 		
-		<div id='responseTable' class="container" style="position:relative;top:50px">
-    		<table id="my-final-table" style="width:1200px; text-align:left;" class="table table-striped">
-	  			<thead>
+	      
 
-	    			<th>CountyName</th>
-	   				<th>Email</th>
-	   				<th>Name</th>
-	   				<th>OrganizationID</th>
-	   				<th>State</th>
-	   				<th>city</th>
-	   				<th>type</th>
-	   				<th>zip</th>
-	  			</thead>
-	  			<tbody>
-	  			</tbody>
-			</table>
-   		 </div>
-
-   		<!-- Button trigger modal -->
-   		<div>
-			
-              
-             <p data-target="#myModal" data-toggle="modal"  data-id="my_id_value" >wordk</p>
-		<div>	
-			<!-- Modal -->
-
-			<div class="modal fade admin" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-			  <div class="modal-dialog" role="document">
-			    <div class="modal-content">
-			      <div class="modal-header">
-			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-			        
-			      <div class="modal-body">
-			        <div id='tabs'>
-			      	</div>
-			      </div>
-			      
-			    </div>
-			  </div>
-			</div>
+	                 
+    	
 
 	</div>
    		 
+<script>
+	 var map; 
+	 function initMap() {
+	 				console.log('DivLocation',document.getElementById('locationMap'));	
+                    map = new google.maps.Map(document.getElementById('locationMap'), {
+                    center: {lat: -34.397, lng:150.644},
+                    zoom: 8
+                     });
+                  }
+</script>
+<script async defer
+  	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-CxXX9NObUa0JBqZVM-q5SVYx6S-Uee4&callback=initMap">
+ </script>
 
 </body>
 </html>
