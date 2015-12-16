@@ -7,12 +7,16 @@
 	<script src="lib/xmlToJson.JqueryPlugIn.js"></script>
 	<script src="lib/angular.min.js" ></script>
 	<script src="lib/angularRoute-min.js"></script>
-	<script src="lib/bootstrap/js/bootstrap.min.js"></script> 
-    	<script src="lib/DynaTable/jquery.dynatable.js" ></script>
-    	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
-    	<script src="js/myApp.js" ></script>
+	<script src="lib/myPlugin.js"></script>
+	
+	<script src="lib/DynaTable/jquery.dynatable.js" ></script>
+	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	<script src="lib/bootstrap/js/bootstrap.min.js"></script> 	
+	<script src="js/myApp.js" ></script>
 	<script src="js/controllers.js" ></script>
+
+
 
 
 	
@@ -44,18 +48,18 @@
 	</div>
    		 
 <script>
-	 var map; 
-	 function initMap() {
-	 				console.log('DivLocation',document.getElementById('locationMap'));	
-                    map = new google.maps.Map(document.getElementById('locationMap'), {
-                    center: {lat: -34.397, lng:150.644},
-                    zoom: 8
-                     });
-                  }
-</script>
-<script async defer
-  	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-CxXX9NObUa0JBqZVM-q5SVYx6S-Uee4&callback=initMap">
- </script>
+	    	 var map; 
+	    	 function initMap() {
+	    	 				console.log('DivLocation',document.getElementById('locationMap'));	
+	                        map = new google.maps.Map(document.getElementById('locationMap'), {
+	                        center: {lat: -34.397, lng:150.644},
+	                        zoom: 8
+	                         });
+	                      }
+	    </script>
+		<!--<script async defer
+	      	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-CxXX9NObUa0JBqZVM-q5SVYx6S-Uee4&callback=initMap">
+	     </script>-->
 
 </body>
 </html>

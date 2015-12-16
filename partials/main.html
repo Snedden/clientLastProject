@@ -1,20 +1,22 @@
 <section  id="mainPage">
 	<div  class="row" id='selectType'>
 		 	<div class="col-md-4" >
-				<select class="form-control"  ng-model="type" ng-options="type.type for type in row" ng-change="getFormData()"  >
+		 		
+				<b>Type</b><select class="form-control"  ng-model="type"   ng-options="type.type for type in row" ng-change="getFormData();"  >
 		  		
 		  		</select>
+		  		
             </div>	
             <div class="col-md-4">
-				<select class="form-control" ng-model="state" ng-options="state.abbreviation for state in states" ng-change="loadCities()">
+				<b>State</b><select class="form-control" ng-model="state" ng-options="state.abbreviation for state in states" ng-change="loadCities()">
 	  			</select>
             </div>
 
             <div class="col-md-4">
-				<select class="form-control" ng-model="city" ng-init="cities[0].city" ng-options="city.city for city in cities" ng-change="cityChanged(city.city)"  >
+				<b>City</b><select class="form-control" ng-model="city" ng-init="cities[0].city" ng-options="city.city for city in cities " ng-change="getFormData();" >
 	  			</select>
 	  		</div>	
-	  			{{city.city}}{{ state.name}}{{ type.type}}{{ orgName}}{{ orgCounty}}{{ orgZip}}
+	  			
         </div>
         <div id='inputType' style="margin-top:10px">
         	<div class="col-md-4" >
@@ -28,7 +30,7 @@
         	</div>
         </div>
 		
-		<div id='responseTable' class="container" style="position:relative;top:50px">
+		<div id='responseTable' style="display:none" class="container" style="position:relative;top:50px">
     		<table id="my-final-table" style="width:1200px; text-align:left;" class="table table-striped">
 	  			<thead>
 
@@ -61,14 +63,22 @@
 			        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
 			        
 			      <div class="modal-body">
-			        <div id='tabs'>
+			      	<!--tabs-->
+			        <div id='tabs' style="height:400px;overflow:scroll">
 			        	<div id="tabs2">
 					         <ul >
 					            <li  ng-repeat="row in tabs.row"><a href="#tabs-{{$index +2}}">{{row.Tab}}</a></li>
 					            
 					         </ul>
 					         <div   ng-repeat="row in tabs.row" id="tabs-{{$index + 2}}">
-
+					         	<div ng-if="row.Tab=='General'">
+					         		<p>Name:<span>{{general.name}}</span></p>
+					         		<p>Email:<span>{{general.email}}</span></p>
+					         		<p>Description:<span>{{general.description}}</span></p>
+					         		<p>Members:<span>{{general.nummemebrs}}</span></p>
+					         		<p>Calls:<span>{{general.numcalls}}</span></p>
+					         	</div>
+						
 					            <div ng-if="row.Tab=='Locations'">
 					            	<div id='locationDetail' style="width:40%;;display:inline-block">
 
@@ -125,32 +135,115 @@
 
                                      </div>	
                                       <!--google maps api-->
-    								
+    					      			
                                     
 					            </div>
 
 					             <div ng-if="row.Tab=='People'">
 					            	<div id='locationDetail' style="width:40%;;display:inline-block">
 
-                                         <select ng-if="people.siteCount!='1'"  ng-model="obj.person" ng-options="site.siteType for site in people.site" ng-change="changePeople()"></select>
+                                         <select ng-if="people.siteCount!='1'"  ng-model="obj.site" ng-options="site.siteType for site in people.site" ng-change="changePeople()"></select>
  
                                          <p>Address:
-                                         	<span  ng-if="locations.count!='1'">{{obj.person.address}}</p><!--multiple sites found-->
+                                         	<span  ng-if="locations.count!='1'">{{obj.site.address}}</p><!--multiple sites found-->
                                          	<span ng-if="locations.count=='1'">{{people.site.address}}</span><!--single site found-->
                                          </p>
+                                          <div ng-if="obj.site.personCount==='0'" ng-repeat="object in obj.site.person" style="margin-top:2px">
+                                         	<p>No persons in this site</p>
+                                         </div>
+
+                                         <div ng-if="obj.site.personCount=='1'"  style="margin-top:2px">
+                                         	<p>Name:{{people.site.person.fName}}<span>" "</span>{{{{people.site..person.mName}}<span>" "</span>{{{{people.site.person.lName}}
+                                         	<p>Roll:{{object.person.Role}} 
+                                         </div> 
+
+                                         <div ng-if="obj.site.personCount!='0'&&obj.site.personCount!='1'">
+	                                         <div   ng-repeat="person in obj.site.person" style="margin-top:2px">
+	                                         	<p>Name:{{person.fName}}<span> </span>{{person.mName}}<span> </span>{{person.lName}}
+
+	                                         	<p>Roll:{{person.Role}} 
+	                                         </div> 
+	                                     </div>    	
                                           
                                          	
 
-                                     </div>
-                                     <div id='locationMap' style="width:40%;display:inline-block;background-color:black">
-
-                                     </div>	
-                                      <!--google maps api-->
-    								
+                                      </div>
                                     
-					            </div>
+                                      
+    							</div>
 
-					            <p >{{row.Tab}} </p>
+    							<div ng-if="row.Tab=='Treatment'">
+    								<h3>Treatments</h3>
+    								<table ng-if="treatments.count!='0'" style="width:100%">
+    									<tr>
+    										<th>Type</th>
+    										<th>Abbreviation</th>
+    									</tr>
+    									
+										<tr ng-repeat="treatment in treatments.treatment">
+											<td>{{treatment.type}}</td>
+											<td>{{treatment.abbreviation}}</td>
+										</tr>
+										
+    									
+    								</table>
+    								<span ng-if="treatments.count=='0'">No treatments available</span>	
+    							</div>	
+
+    							<div ng-if="row.Tab=='Physicians'">
+					         		<h3>Physicians</h3>
+    								<table ng-if="physicians.count!='0'" style="width:100%">
+    									<tr>
+    										<th>Name</th>
+    										<th>License</th>
+    										<th>Contact</th>
+    									</tr>
+    									
+										<tr ng-repeat="physician in physicians.physician">
+											<td>{{physician.fName}}<span> </span>{{physician.mName}}<span> </span>{{physician.lName}}</td>
+											<td>{{physician.license}}</td>
+											<td>{{physician.phone}}</td>
+										</tr>
+									</table>
+									<span ng-if="physicians.count=='0'">No physicians available</span>	
+					         	</div>
+
+    							<div ng-if="row.Tab=='Training'">
+    								<h3>Training</h3>
+    								<table ng-if="trainings.count!='0'" style="width:100%">
+    									<tr>
+    										<th>Type</th>
+    										<th>Abbreviation</th>
+    									</tr>
+    									
+										<tr ng-repeat="obj in trainings.training">
+											<td>{{training.type}}</td>
+											<td>{{training.abbreviation}}</td>
+										</tr>
+										<span ng-if="trainings.count=='0'">No tranings available</span>
+    									
+    								</table>	
+    							</div>
+    							<div ng-if="row.Tab=='Facilities'">
+    								<table ng-if="physicians.count!='0'" style="width:100%">
+    									<tr>
+    										<th>Name</th>
+    										<th>Quality</th>
+    										<th>Description</th>
+    									</tr>
+    									
+										<tr ng-repeat="object in facilities.facility">
+											<td>{{object.type}}</td>
+											<td>{{object.quantity}}</td>
+											<td>{{object.description}}</td>
+										</tr>
+									</table>
+									<span ng-if="physicians.count=='0'">No physicians available</span>	
+
+    							</div>
+
+
+					            
 					         </div>
 					        
 					    </div>

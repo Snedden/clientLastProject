@@ -5,8 +5,5 @@ myApp.config(['$routeProvider',function($routeProvider){
 	when('/',{
 		templateUrl:'partials/main.html',
 		controller:'mainController'
-	}).
-	otherwise({
-		redirectTo:'/'
-	});
+	})
 }]);
